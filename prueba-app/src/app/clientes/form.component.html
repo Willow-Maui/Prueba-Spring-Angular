@@ -1,0 +1,86 @@
+<ul class="alert alert-danger" *ngIf="errors?.length>0">
+  <li *ngFor="let err of errors">
+    {{err}}
+  </li>
+</ul>
+<div class="card bg-dark text-white">
+  <div class="card-header"> {{ titulo }} </div>
+  <div class="card-body">
+    <form #clienteForm="ngForm">
+      <div class="form-group-row">
+        <label for="" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" requiered minlength="2" #nombre="ngModel">
+          <div class=alert alert-danger *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+            <div *ngIf="nombre.errors.required">
+              El nombre es necesario.
+            </div>
+            <div *ngIf="nombre.errors.minlength">
+              Es necesario que el nombre sea al menos 2 caracteres de largo.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group-row">
+        <label for="" class="col-form-label col-sm-2">Apellido</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido" requiered #apellido="ngModel">
+          <div class=alert alert-danger *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+            <div *ngIf="apellido.errors.required">
+              El apellido es necesario.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group-row">
+        <label for="" class="col-form-label col-sm-2">Email</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="cliente.email" name="email" requiered email #correo="ngModel">
+          <div class=alert alert-danger *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+            <div *ngIf="correo.errors.required">
+              El email es necesario.
+            </div>
+            <div *ngIf="correo.errors.email">
+              Ha de tener formato válidp.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group-row">
+        <label for="" class="col-form-label col-sm-2">Fecha</label>
+        <div class="col-sm-6">
+          <input matInput [matDatepicker]="picker" class="form-control" [(ngModel)]="cliente.createAt" name="createAt" requiered #createAt="ngModel" style="display:inline; width:300px;">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <div class=alert alert-danger *ngIf="createAt.invalid && (createAt.dirty || createAt.touched)">
+            <div *ngIf="createAt.errors.required">
+              La fecha de creación es necesaria.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group-row">
+        <label for="" class="col-form-label col-sm-2">Región</label>
+        <div class="col-sm-6">
+          <select [compareWith]="compararRegion" class="form-control" [(ngModel)]="cliente.region" name="region" requiered #region="ngModel" style="display:inline; width:500px;">
+            <option [ngValue]="undefined">--- Seleccionar una región ---</option>
+            <option *ngFor="let region of regiones" [ngValue]="region">{{region.nombre}}</option>
+          </select>
+          <div class=alert alert-danger *ngIf="region.invalid && (region.dirty || region.touched)">
+            <div *ngIf="region.errors.required">
+              La fecha de creación es necesaria.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group-row">
+        <div class="col-sm-6">
+          <button *ngIf="!cliente.id else elseBlock" class="btn btn-primary" role="button" (click)='create()' [disabled]="!clienteForm.form.valid">Crear</button>
+          <ng-template #elseBlock>
+            <button class="btn btn-primary" role="button" (click)='update()' [disabled]="!clienteForm.form.valid">Modificar</button>
+          </ng-template>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

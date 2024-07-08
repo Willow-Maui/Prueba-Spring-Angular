@@ -1,0 +1,9 @@
+<button type="button" (click)="setOcultar()" class='btn btn-primary my-3'>{{ (ocultar==false)? 'Ocultar':'Mostrar'}}</button>
+<div class='card'>
+  <div clss='card-header'>
+    Letras
+  </div>
+  <ul class="list-group" *ngIf="ocultar != true">
+    <li class="list-group-item" *ngFor="let letra of listaPrueba">{{ letra }}</li>
+  </ul>
+</div>

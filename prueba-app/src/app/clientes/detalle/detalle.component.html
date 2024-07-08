@@ -1,0 +1,77 @@
+<div *ngIf="modalService._modal" class="abrir-modal animacion fadeIn">
+  <div class="modal" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ titulo }}</h5>
+          <button type="button" (click)="cerrarModal()" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <ul *ngIf="cliente" class="list-group text-dark mb-3">
+                  <li class="list-group-item">{{cliente.nombre}}</li>
+                  <li class="list-group-item">{{cliente.apellido}}</li>
+                  <li class="list-group-item">{{cliente.email}}</li>
+                  <li class="list-group-item">{{cliente.createAt| date:"fullDate"}}</li>
+                  <li class="list-group-item">{{cliente.region.nombre}}</li>
+                </ul>
+                <div *ngIf="authService.hasRole('ROLE_ADMIN')" class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span (click)="subirFoto()" class="input-group-text">Subir</span>
+                  </div>
+                  <div *ngIf="authService.hasRole('ROLE_ADMIN')" class="custom-file mb-3">
+                    <input (change)="seleccionarFoto($event)" type="file" class="custom-file-input" id="inputGroupFile01">
+                    <label class="custom-file-label" for="inputGroupFile01">Escoger archivo</label>
+                  </div>
+                </div>
+                <div *ngIf="progreso>0" class="progress" style="height: 40px;">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" attr.aria-valuenow="{{progreso}}" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width: progreso+'%'}">{{progreso}}%</div>
+                </div>
+              </div>
+              <div class="col-sm">
+                <img *ngIf="cliente?.foto&&authService.hasRole('ROLE_USER')" src="http://localhost:8180/api/uploads/img/{{cliente.foto}}" alt="{{cliente.foto}}" class="img thumbnail rounded">
+              </div>
+            </div>
+            <div *ngIf="authService.hasRole('ROLE_ADMIN')" class="float-right">
+              <button type="button" name="crear factura" [routerLink]="['/facturas/form',cliente.id]" class="btn btn-success">crear</button>
+            </div>
+            <div class="row">
+              <div *ngIf="cliente.facturas.length==0" class="alert alert-info my-4">
+                No hay facturas para este cliente.
+              </div>
+              <table *ngIf="cliente.facturas.length>0" class="table table-bordered table-stripped my-4">
+                <thead>
+                  <tr>
+                    <th>Id factura</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Detalle</th>
+                    <th>Eliminar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let factura of cliente.facturas">
+                    <td>{{factura.id}}</td>
+                    <td>{{factura.descripcion}}</td>
+                    <td>{{factura.createAt}}</td>
+                    <td>{{factura.total}}</td>
+                    <td><button class="btn btn-primary btn-sm" type="button" [routerLink]="['/facturas',factura.id]">Ver</button></td>
+                    <td><button class="btn btn-danger btn-sm" type="button" (click)="deleteFactura(factura)">Eliminar</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="cerrarModal()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
